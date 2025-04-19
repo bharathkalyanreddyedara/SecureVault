@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ECC Secure Messaging</title>
+    <link rel="stylesheet" href="styles.css" />
+    <!-- Include Crypto Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/elliptic/6.5.4/elliptic.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <header class="header">
+        <div class="logo">
+          <div class="icon-container">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shield-icon">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+          </div>
+          <h1>ECC Secure Messaging</h1>
+        </div>
+        <p class="subtitle">
+          Secure your communications with Elliptic Curve Cryptography. 
+          Generate keys, encrypt messages, and decrypt them safely.
+        </p>
+      </header>
+
+      <!-- Navigation Tabs -->
+      <nav class="tabs">
+        <button id="tab-generate" class="tab active" data-tab="generate">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15.5 7.5 19 4m-5.5 6.5 3 3M4 7a4 4 0 0 1 4-4c1.37 0 2.5.71 3.25 1.75m0 5.5L9 12.5l-7 7L8.5 20l7-7-2.25-2.25m2-2a4 4 0 0 1 0 5.5" />
+          </svg>
+          Key Generation
+        </button>
+        <button id="tab-encrypt" class="tab" data-tab="encrypt">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="16" height="10" x="4" y="10" rx="2" />
+            <path d="m16 10-4-4-4 4" />
+            <path d="M12 6V3" />
+          </svg>
+          Encryption
+        </button>
+        <button id="tab-decrypt" class="tab" data-tab="decrypt">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="16" height="10" x="4" y="10" rx="2" />
+            <path d="m8 10 4-4 4 4" />
+            <path d="M12 6v7" />
+          </svg>
+          Decryption
+        </button>
+        <button id="tab-history" class="tab" data-tab="history">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
+          </svg>
+          History
+        </button>
+      </nav>
+
+      <!-- Content Sections -->
+      <div class="content">
+        <!-- Key Generation Section -->
+        <section id="section-generate" class="section card active">
+          <div class="section-header">
+            <h2>Key Generation</h2>
+            <div class="tooltip-container">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 16v-4" />
+                <path d="M12 8h.01" />
+              </svg>
+              <div class="tooltip">
+                Generate a secure ECC key pair. The private key should be kept secret, while the public key can be shared with others who want to send you encrypted messages.
+              </div>
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button id="generate-keys" class="btn primary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 2v6h-6" />
+                <path d="M3 12a9 9 0 0 1 15-6.7L21 8" />
+                <path d="M3 12a9 9 0 0 0 15 6.7l3-2.7" />
+              </svg>
+              Generate Key Pair
+            </button>
+            <button id="download-keys" class="btn secondary" disabled>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Download Keys
+            </button>
+            <button id="save-keys-csv" class="btn secondary" disabled>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+                <path d="M18 14v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <path d="M10 14v.01" />
+                <path d="M14 14v.01" />
+                <path d="M10 18v.01" />
+                <path d="M14 18v.01" />
+              </svg>
+              Save as CSV
+            </button>
+          </div>
+
+          <div id="keys-container" class="keys-container" style="display: none;">
+            <div class="key-group">
+              <div class="key-header">
+                <label>Public Key</label>
+                <div class="tooltip-container">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 16v-4" />
+                    <path d="M12 8h.01" />
+                  </svg>
+                  <div class="tooltip">Your public key can be safely shared with others. They will use this key to encrypt messages for you.</div>
+                </div>
+                <button class="icon-btn copy-btn" data-copy="public-key">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </svg>
+                </button>
+              </div>
+              <div id="public-key-display" class="key-display"></div>
+            </div>
+            
+            <div class="key-group">
+              <div class="key-header">
+                <label>Private Key</label>
+                <div class="tooltip-container">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 16v-4" />
+                    <path d="M12 8h.01" />
+                  </svg>
+                  <div class="tooltip">Your private key must be kept secret. Never share it with anyone. It will be used to decrypt messages sent to you.</div>
+                </div>
+                <button class="icon-btn copy-btn" data-copy="private-key">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </svg>
+                </button>
+                <div class="warning">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                  Keep this key secret!
+                </div>
+              </div>
+              <div id="private-key-display" class="key-display"></div>
+            </div>
+            
+            <div class="warning-box">
+              <p>
+                <span>Important:</span> Store your private key securely. 
+                If lost, you won't be able to decrypt messages. This key is only stored in your browser 
+                session and will be lost when you close or refresh this page.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Encryption Section -->
+        <section id="section-encrypt" class="section card">
+          <div class="section-header">
+            <h2>Encryption</h2>
+            <div class="tooltip-container">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 16v-4" />
+                <path d="M12 8h.01" />
+              </svg>
+              <div class="tooltip">
+                Encrypt a message using someone's public key. Only the person with the corresponding private key will be able to decrypt it.
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="recipient-key">Recipient's Public Key</label>
+            <div class="tooltip-container">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 16v-4" />
+                <path d="M12 8h.01" />
+              </svg>
+              <div class="tooltip">Enter the public key of the person you want to send the encrypted message to.</div>
+            </div>
+            <textarea id="recipient-key" class="textarea" placeholder="Enter recipient's public key (hex format)"></textarea>
+            <div id="recipient-key-error" class="error-message"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="plaintext">Message</label>
+            <div class="tooltip-container">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 16v-4" />
+                <path d="M12 8h.01" />
+              </svg>
+              <div class="tooltip">Enter the message you want to encrypt. This message will only be readable by the owner of the private key corresponding to the recipient's public key.</div>
+            </div>
+            <textarea id="plaintext" class="textarea" placeholder="Enter your message here..."></textarea>
+            <div id="plaintext-error" class="error-message"></div>
+          </div>
+
+          <div class="button-group">
+            <button id="encrypt-message" class="btn primary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="16" height="10" x="4" y="10" rx="2" />
+                <path d="m16 10-4-4-4 4" />
+                <path d="M12 6V3" />
+              </svg>
+              Encrypt Message
+            </button>
+            <button id="save-encrypted-csv" class="btn secondary" disabled>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+                <path d="M18 14v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <path d="M10 14v.01" />
+                <path d="M14 14v.01" />
+                <path d="M10 18v.01" />
+                <path d="M14 18v.01" />
+              </svg>
+              Save to CSV
+            </button>
+          </div>
+
+          <div id="encrypted-result" class="result-container" style="display: none;">
+            <div class="result-header">
+              <label>Encrypted Message</label>
+              <div class="tooltip-container">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 16v-4" />
+                  <path d="M12 8h.01" />
+                </svg>
+                <div class="tooltip">This is your encrypted message. You can safely share this with anyone, but only the recipient with the correct private key can decrypt it.</div>
+              </div>
+              <div class="actions">
+                <button id="copy-encrypted" class="icon-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </svg>
+                </button>
+                <button id="download-encrypted" class="icon-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div id="ciphertext-display" class="key-display"></div>
+          </div>
+        </section>
+
+        <!-- Decryption Section -->
+        <section id="section-decrypt" class="section card">
+          <div class="section-header">
+            <h2>Decryption</h2>
+            <div class="tooltip-container">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 16v-4" />
+                <path d="M12 8h.01" />
+              </svg>
+              <div class="tooltip">
+                Decrypt a message that was encrypted for you using your public key. You'll need your private key to decrypt the message.
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="ciphertext">Encrypted Message</label>
+            <div class="tooltip-container">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 16v-4" />
+                <path d="M12 8h.01" />
+              </svg>
+              <div class="tooltip">Paste the encrypted message that was sent to you.</div>
+            </div>
+            <textarea id="ciphertext" class="textarea" placeholder="Paste the encrypted message here..."></textarea>
+            <div id="ciphertext-error" class="error-message"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="private-key-input">Your Private Key</label>
+            <div class="tooltip-container">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 16v-4" />
+                <path d="M12 8h.01" />
+              </svg>
+              <div class="tooltip">Enter your private key to decrypt the message. Your private key never leaves your device.</div>
+            </div>
+            <div class="warning float-right">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              This key is never sent to any server
+            </div>
+            <textarea id="private-key-input" class="textarea" placeholder="Enter your private key (hex format)"></textarea>
+            <div id="private-key-error" class="error-message"></div>
+          </div>
+
+          <div class="button-group">
+            <button id="decrypt-message" class="btn primary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="16" height="10" x="4" y="10" rx="2" />
+                <path d="m8 10 4-4 4 4" />
+                <path d="M12 6v7" />
+              </svg>
+              Decrypt Message
+            </button>
+            <button id="save-decrypted-csv" class="btn secondary" disabled>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+                <path d="M18 14v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <path d="M10 14v.01" />
+                <path d="M14 14v.01" />
+                <path d="M10 18v.01" />
+                <path d="M14 18v.01" />
+              </svg>
+              Save to CSV
+            </button>
+          </div>
+
+          <div id="decrypted-result" class="result-container" style="display: none;">
+            <div class="result-header">
+              <label>Decrypted Message</label>
+              <div class="tooltip-container">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 16v-4" />
+                  <path d="M12 8h.01" />
+                </svg>
+                <div class="tooltip">This is the original message that was encrypted.</div>
+              </div>
+              <button id="copy-decrypted" class="icon-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                </svg>
+              </button>
+            </div>
+            <div id="decrypted-text" class="decrypted-display"></div>
+          </div>
+        </section>
+
+        <!-- History Section -->
+        <section id="section-history" class="section card">
+          <div class="section-header">
+            <h2>History</h2>
+            <div class="tooltip-container">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 16v-4" />
+                <path d="M12 8h.01" />
+              </svg>
+              <div class="tooltip">
+                View and manage your saved keys and messages.
+              </div>
+            </div>
+          </div>
+
+          <div class="tabs-secondary">
+            <button class="tab-secondary active" data-history-tab="keys">Key Pairs</button>
+            <button class="tab-secondary" data-history-tab="encrypted">Encrypted Messages</button>
+            <button class="tab-secondary" data-history-tab="decrypted">Decrypted Messages</button>
+          </div>
+
+          <div id="history-keys" class="history-section active">
+            <div id="key-pairs-history" class="history-list">
+              <p class="empty-message">No saved key pairs. Generate and save some keys to see them here.</p>
+            </div>
+            <div class="button-group">
+              <button id="export-all-keys-csv" class="btn secondary" disabled>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Export All as CSV
+              </button>
+              <button id="clear-keys-history" class="btn secondary" disabled>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 6h18" />
+                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                  <line x1="10" y1="11" x2="10" y2="17" />
+                  <line x1="14" y1="11" x2="14" y2="17" />
+                </svg>
+                Clear History
+              </button>
+            </div>
+          </div>
+
+          <div id="history-encrypted" class="history-section">
+            <div id="encrypted-messages-history" class="history-list">
+              <p class="empty-message">No saved encrypted messages. Encrypt and save some messages to see them here.</p>
+            </div>
+            <div class="button-group">
+              <button id="export-all-encrypted-csv" class="btn secondary" disabled>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Export All as CSV
+              </button>
+              <button id="clear-encrypted-history" class="btn secondary" disabled>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 6h18" />
+                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                  <line x1="10" y1="11" x2="10" y2="17" />
+                  <line x1="14" y1="11" x2="14" y2="17" />
+                </svg>
+                Clear History
+              </button>
+            </div>
+          </div>
+
+          <div id="history-decrypted" class="history-section">
+            <div id="decrypted-messages-history" class="history-list">
+              <p class="empty-message">No saved decrypted messages. Decrypt and save some messages to see them here.</p>
+            </div>
+            <div class="button-group">
+              <button id="export-all-decrypted-csv" class="btn secondary" disabled>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Export All as CSV
+              </button>
+              <button id="clear-decrypted-history" class="btn secondary" disabled>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 6h18" />
+                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                  <line x1="10" y1="11" x2="10" y2="17" />
+                  <line x1="14" y1="11" x2="14" y2="17" />
+                </svg>
+                Clear History
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <p>ECC Secure Messaging - Elliptic Curve Cryptography for secure communications</p>
+        <p class="disclaimer">
+          All cryptographic operations are performed locally in your browser. 
+          No data is sent to any server.
+        </p>
+      </footer>
+
+      <!-- Toast Notification -->
+      <div id="toast" class="toast hidden">
+        <div class="toast-content">
+          <div id="toast-message"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
