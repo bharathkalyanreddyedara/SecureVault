@@ -51,12 +51,6 @@
           </svg>
           Decryption
         </button>
-        <button id="tab-history" class="tab" data-tab="history">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
-          </svg>
-          History
-        </button>
       </nav>
 
       <!-- Content Sections -->
@@ -360,104 +354,6 @@
             <div id="decrypted-text" class="decrypted-display"></div>
           </div>
         </section>
-
-        <!-- History Section -->
-        <section id="section-history" class="section card">
-          <div class="section-header">
-            <h2>History</h2>
-            <div class="tooltip-container">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon">
-                <circle cx="12" cy="12" r="10" />
-                <path d="M12 16v-4" />
-                <path d="M12 8h.01" />
-              </svg>
-              <div class="tooltip">
-                View and manage your saved keys and messages.
-              </div>
-            </div>
-          </div>
-
-          <div class="tabs-secondary">
-            <button class="tab-secondary active" data-history-tab="keys">Key Pairs</button>
-            <button class="tab-secondary" data-history-tab="encrypted">Encrypted Messages</button>
-            <button class="tab-secondary" data-history-tab="decrypted">Decrypted Messages</button>
-          </div>
-
-          <div id="history-keys" class="history-section active">
-            <div id="key-pairs-history" class="history-list">
-              <p class="empty-message">No saved key pairs. Generate and save some keys to see them here.</p>
-            </div>
-            <div class="button-group">
-              <button id="export-all-keys-csv" class="btn secondary" disabled>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                Export All as CSV
-              </button>
-              <button id="clear-keys-history" class="btn secondary" disabled>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M3 6h18" />
-                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                  <line x1="10" y1="11" x2="10" y2="17" />
-                  <line x1="14" y1="11" x2="14" y2="17" />
-                </svg>
-                Clear History
-              </button>
-            </div>
-          </div>
-
-          <div id="history-encrypted" class="history-section">
-            <div id="encrypted-messages-history" class="history-list">
-              <p class="empty-message">No saved encrypted messages. Encrypt and save some messages to see them here.</p>
-            </div>
-            <div class="button-group">
-              <button id="export-all-encrypted-csv" class="btn secondary" disabled>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                Export All as CSV
-              </button>
-              <button id="clear-encrypted-history" class="btn secondary" disabled>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M3 6h18" />
-                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                  <line x1="10" y1="11" x2="10" y2="17" />
-                  <line x1="14" y1="11" x2="14" y2="17" />
-                </svg>
-                Clear History
-              </button>
-            </div>
-          </div>
-
-          <div id="history-decrypted" class="history-section">
-            <div id="decrypted-messages-history" class="history-list">
-              <p class="empty-message">No saved decrypted messages. Decrypt and save some messages to see them here.</p>
-            </div>
-            <div class="button-group">
-              <button id="export-all-decrypted-csv" class="btn secondary" disabled>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                Export All as CSV
-              </button>
-              <button id="clear-decrypted-history" class="btn secondary" disabled>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M3 6h18" />
-                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                  <line x1="10" y1="11" x2="10" y2="17" />
-                  <line x1="14" y1="11" x2="14" y2="17" />
-                </svg>
-                Clear History
-              </button>
             </div>
           </div>
         </section>
